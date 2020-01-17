@@ -1,4 +1,4 @@
-# chess_exercise_manager_flutter
+# Chess exercises manager.
 
 Organise your favorite chess exercises and play them against the engine at its maximum strength.
 
