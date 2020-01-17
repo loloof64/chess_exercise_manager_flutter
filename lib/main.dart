@@ -16,7 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
@@ -45,6 +48,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  static const platform = const MethodChannel('loloof64.chess_utils/engine_discovery');
+  List<String> _engines = [];
+
+  Future<void> _getInstalledEngines() async {
+    List<String> engines;
+    try {
+      final int result = await platform.invokeMethod('getInstalledEngines');
+      engines = [];
+    } on PlatformException catch (e) {
+      engines = [];
+    }
+
+    setState(() {
+      _engines = engines;
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
