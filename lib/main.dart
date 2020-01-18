@@ -24,7 +24,6 @@ import 'package:flutter/services.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -47,16 +46,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  static const platform = const MethodChannel('loloof64.chess_utils/engine_discovery');
-  List<String> _engines = [];
+  static const platform =
+      const MethodChannel('loloof64.chess_utils/engine_discovery');
+  var _engines = [];
 
-  Future<void> _getInstalledEngines() async {
-    List<String> engines;
+  _MyHomePageState() {
+    _updateInstalledEngines().catchError((err) {
+      print("Failed to get installed engines : ${err.toString()}");
+    });
+  }
+
+  Future<void> _updateInstalledEngines() async {
+    var engines;
     try {
-      final int result = await platform.invokeMethod('getInstalledEngines');
-      engines = [];
-    } on PlatformException catch (e) {
+      await platform.invokeMethod('copyAllEnginesToAppDir');
+      var enginesJoined =
+          await platform.invokeMethod('getEnginesList');
+
+      if (enginesJoined == null || enginesJoined.length == 0) engines = [];
+      else engines = enginesJoined.split(",").toList();
+    }  catch (e) {
+      print("Failed to update installed engines ${e.toString()}");
       engines = [];
     }
 
@@ -65,36 +75,38 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    var enginesChildren;
+
+    if (_engines.length > 0) {
+      enginesChildren = _engines.map((current) {
+        return Text(
+          current,
+          style: TextStyle(fontSize: 20),
+        );
+      }).toList();
+    } else {
+      enginesChildren = [
+        Text(
+          "No OEX chess engine installed",
+          style: TextStyle(fontSize: 20),
+        )
+      ];
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: enginesChildren,
+          ),
+        ),
+      floatingActionButton: FloatingActionButton(onPressed: _updateInstalledEngines,
+        child: Icon(Icons.refresh),
       ),
     );
   }
