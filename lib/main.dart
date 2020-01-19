@@ -18,7 +18,9 @@
  */
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
@@ -60,12 +62,13 @@ class _MyHomePageState extends State<MyHomePage> {
     var engines;
     try {
       await platform.invokeMethod('copyAllEnginesToAppDir');
-      var enginesJoined =
-          await platform.invokeMethod('getEnginesList');
+      var enginesJoined = await platform.invokeMethod('getEnginesList');
 
-      if (enginesJoined == null || enginesJoined.length == 0) engines = [];
-      else engines = enginesJoined.split(",").toList();
-    }  catch (e) {
+      if (enginesJoined == null || enginesJoined.length == 0)
+        engines = [];
+      else
+        engines = enginesJoined.split(",").toList();
+    } catch (e) {
       print("Failed to update installed engines ${e.toString()}");
       engines = [];
     }
@@ -80,12 +83,21 @@ class _MyHomePageState extends State<MyHomePage> {
     var enginesChildren;
 
     if (_engines.length > 0) {
-      enginesChildren = _engines.map((current) {
-        return Text(
-          current,
+      enginesChildren = [
+        Text(
+          "Select the chess engine",
           style: TextStyle(fontSize: 20),
-        );
-      }).toList();
+        ),
+        ListView(
+          shrinkWrap: true,
+          children: _engines.map((current) {
+            return Text(
+                current,
+                style: TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            );
+          }).toList(),)
+      ];
     } else {
       enginesChildren = [
         Text(
@@ -96,16 +108,17 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: enginesChildren,
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: enginesChildren,
-          ),
-        ),
-      floatingActionButton: FloatingActionButton(onPressed: _updateInstalledEngines,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _updateInstalledEngines,
         child: Icon(Icons.refresh),
       ),
     );
