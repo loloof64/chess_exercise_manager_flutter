@@ -23,6 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+import 'game.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -52,10 +54,18 @@ class _MyHomePageState extends State<MyHomePage> {
       const MethodChannel('loloof64.chess_utils/engine_discovery');
   var _engines = [];
 
-  _MyHomePageState() {
+  @override
+  void initState() {
+    super.initState();
     _updateInstalledEngines().catchError((err) {
       print("Failed to get installed engines : ${err.toString()}");
     });
+  }
+
+  @override
+  void dispose() {
+    platform.invokeMethod("closeEngineProcessStreams").then((result) {});
+    super.dispose();
   }
 
   Future<void> _updateInstalledEngines() async {
@@ -77,6 +87,18 @@ class _MyHomePageState extends State<MyHomePage> {
       _engines = engines;
     });
   }
+  Future<void> _selectEngine(engineName) async {
+    try {
+      await platform.invokeMethod('chooseEngine', engineName);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => GamePage()),
+      );
+    } catch (e) {
+      print("Failed to select engine");
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,10 +113,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ListView(
           shrinkWrap: true,
           children: _engines.map((current) {
-            return Text(
+            return FlatButton(
+              child: Text(
                 current,
                 style: TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
+                textAlign: TextAlign.center,
+              ),
+              onPressed: () =>_selectEngine(current),
             );
           }).toList(),)
       ];
