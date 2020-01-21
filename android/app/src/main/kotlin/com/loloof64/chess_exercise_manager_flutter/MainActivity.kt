@@ -20,7 +20,7 @@ class MainActivity: FlutterActivity() {
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
-        methodChannel = MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL);
+        methodChannel = MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
         methodChannel?.setMethodCallHandler(
                         { call, result ->
                             if (call.method.equals("copyAllEnginesToAppDir")) {
@@ -29,15 +29,11 @@ class MainActivity: FlutterActivity() {
                             }
                             else if (call.method.equals("getEnginesList")) {
                                 val enginesNames = getEnginesNames()
-                                result.success(enginesNames);
+                                result.success(enginesNames)
                             }
                             else if (call.method.equals("chooseEngine")) {
                                 val simpleName = call.arguments
                                 chooseEngine(simpleName.toString())
-                                result.success(1)
-                            }
-                            else if (call.method.equals("closeEngineProcessStreams")) {
-                                closeEngineProcessStreams()
                                 result.success(1)
                             }
                             else if (call.method.equals("sendCommandToEngine")) {
@@ -45,7 +41,7 @@ class MainActivity: FlutterActivity() {
                                 result.success(1)
                             }
                             else {
-                                result.notImplemented();
+                                result.notImplemented()
                             }
                         }
                 )
@@ -72,7 +68,7 @@ class MainActivity: FlutterActivity() {
     }
 
     private fun chooseEngine(simpleName: String) {
-        closeEngineProcessStreams()
+        closeEngineProcess()
 
         val completeName = "lib$simpleName.so"
         val directory = File(getFilesDir(), enginesDirectory)
@@ -114,11 +110,18 @@ class MainActivity: FlutterActivity() {
         processInput?.flush()
     }
 
-    private fun closeEngineProcessStreams() {
-            processInput?.close()
-            processInput = null
+    private fun closeEngineProcess() {
+        processInput?.close()
+        processInput = null
 
-            processOuput?.close()
-            processOuput = null
+        processOuput?.close()
+        processOuput = null
+
+        process?.destroy()
+    }
+
+    override fun onDestroy() {
+        closeEngineProcess()
+        super.onDestroy()
     }
 }

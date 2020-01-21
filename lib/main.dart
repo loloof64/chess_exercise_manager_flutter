@@ -62,12 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  @override
-  void dispose() {
-    platform.invokeMethod("closeEngineProcessStreams").then((result) {});
-    super.dispose();
-  }
-
   Future<void> _updateInstalledEngines() async {
     var engines;
     try {

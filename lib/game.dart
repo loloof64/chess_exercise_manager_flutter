@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_abstract_chess_board/flutter_abstract_chess_board.dart';
+
 import 'dart:async';
 
 class GamePage extends StatelessWidget {
@@ -17,12 +19,8 @@ class GamePage extends StatelessWidget {
         title: Text('Chess exercises manager'),
       ),
       body: Center(
-        child: RaisedButton(
-          child: Text(
-            'Get engine output',
-            style: TextStyle(fontSize: 20),
-          ),
-          onPressed: _getEngineOutput,
+        child: ChessBoard(
+            MediaQuery.of(context).size.width
         ),
       ),
     );
@@ -32,7 +30,8 @@ class GamePage extends StatelessWidget {
     try {
       var positionFen = "8/6k1/8/6p1/6P1/4K2P/8/8 w - - 0 1";
       await platform.invokeMethod("sendCommandToEngine", 'ucinewgame');
-      await platform.invokeMethod("sendCommandToEngine", "position fen $positionFen");
+      await platform.invokeMethod(
+          "sendCommandToEngine", "position fen $positionFen");
       await platform.invokeMethod("sendCommandToEngine", "go depth 14");
     } catch (e) {
       print("Failed to get engine output: $e");
