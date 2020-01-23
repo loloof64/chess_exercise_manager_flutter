@@ -14,16 +14,17 @@ class GamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     platform.setMethodCallHandler(_processEngineOutput);
 
+    final screenDimensions = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Chess exercises manager'),
       ),
       body: Center(
-        child: new Builder( builder: (BuildContext context) {
+        child: new OrientationBuilder(builder: (context, orientation) {
           return ChessBoard(
-            MediaQuery.of(context).size.width,
-            fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-            endGameHandler: (type) => handleGameEnded(context, type),
+            orientation == Orientation.portrait ? screenDimensions.width - 20.0 : screenDimensions.height - 90.0,
+            gameEndedHandler: (type) => handleGameEnded(context, type),
           );
         }),
       ),
@@ -33,12 +34,24 @@ class GamePage extends StatelessWidget {
   void handleGameEnded(BuildContext context, EndType endType) {
     var message;
     switch (endType) {
-      case EndType.WhiteCheckmate: message = "Whites checkmate"; break;
-      case EndType.BlackCheckmate: message = "Blacks checkmate"; break;
-      case EndType.Stalemate: message = "Stalemate"; break;
-      case EndType.FiftyMovesDraw: message = "Draw by 50 moves rule"; break;
-      case EndType.InsufficientMaterialDraw: message = "Draw by insuficient material"; break;
-      case EndType.FoldRepetitionsDraw: message = "Draw by 3-folds repetitions"; break;
+      case EndType.WhiteCheckmate:
+        message = "Whites checkmate";
+        break;
+      case EndType.BlackCheckmate:
+        message = "Blacks checkmate";
+        break;
+      case EndType.Stalemate:
+        message = "Stalemate";
+        break;
+      case EndType.FiftyMovesDraw:
+        message = "Draw by 50 moves rule";
+        break;
+      case EndType.InsufficientMaterialDraw:
+        message = "Draw by insuficient material";
+        break;
+      case EndType.FoldRepetitionsDraw:
+        message = "Draw by 3-folds repetitions";
+        break;
     }
     final snackBar = SnackBar(content: Text(message));
     Scaffold.of(context).showSnackBar(snackBar);
