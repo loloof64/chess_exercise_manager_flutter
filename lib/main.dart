@@ -81,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _engines = engines;
     });
   }
+
   Future<void> _selectEngine(engineName) async {
     try {
       await platform.invokeMethod('chooseEngine', engineName);
@@ -135,10 +136,6 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: enginesChildren,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _updateInstalledEngines,
-        child: Icon(Icons.refresh),
       ),
     );
   }
