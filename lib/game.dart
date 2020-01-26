@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_abstract_chess_board/flutter_abstract_chess_board.dart';
+import 'package:flutter_abstract_chess_board/board_data_types.dart';
+import 'translations.dart';
 
 import 'dart:async';
 
@@ -24,7 +26,7 @@ class GamePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chess exercises manager'),
+        title: Text(allTranslations.text('game_title')),
       ),
       body: Center(
         child: new OrientationBuilder(builder: (context, orientation) {
@@ -46,22 +48,22 @@ class GamePage extends StatelessWidget {
     var message;
     switch (endType) {
       case EndType.WhiteCheckmate:
-        message = "Whites checkmate";
+        message = allTranslations.text('white_checkmates');
         break;
       case EndType.BlackCheckmate:
-        message = "Blacks checkmate";
+        message = allTranslations.text('black_checkmates');
         break;
       case EndType.Stalemate:
-        message = "Stalemate";
+        message = allTranslations.text('stalemate');
         break;
       case EndType.FiftyMovesDraw:
-        message = "Draw by 50 moves rule";
+        message = allTranslations.text('fifty moves draw');
         break;
       case EndType.InsufficientMaterialDraw:
-        message = "Draw by insuficient material";
+        message = allTranslations.text('insufficient material draw');
         break;
       case EndType.FoldRepetitionsDraw:
-        message = "Draw by 3-folds repetitions";
+        message = allTranslations.text('three-fold repetitions draw');
         break;
       default:
         return;

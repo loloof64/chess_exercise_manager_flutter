@@ -23,19 +23,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'translations.dart';
+import 'package:devicelocale/devicelocale.dart';
+
 import 'game.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final currentLocaleStr = await Devicelocale.currentLocale;
+  await allTranslations.init(currentLocaleStr.substring(0,2));
+    runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Chess exercises manager',
+      title: allTranslations.text('app_title'),
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Chess engine discovery'),
+      home: MyHomePage(title: allTranslations.text('main_title')),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: allTranslations.supportedLocales(),
     );
   }
 }
@@ -102,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_engines.length > 0) {
       enginesChildren = [
         Text(
-          "Select the chess engine",
+          allTranslations.text('select_engine_message'),
           style: TextStyle(fontSize: 20),
         ),
         ListView(

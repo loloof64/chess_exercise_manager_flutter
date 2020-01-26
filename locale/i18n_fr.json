@@ -1,0 +1,12 @@
+{
+    "app_title": "Organiseur d'exercices d'échecs",
+    "main_title": "Recherche de moteur d'échecs",
+    "select_engine_message": "Choisissez le moteur d'échecs",
+    "game_title": "Jouant l'exercice",
+    "white_checkmates": "Les Blancs font échec et mat.",
+    "black_checkmates": "Les Noirs font échec et mat.",
+    "stalemate": "Pat.",
+    "fifty moves draw": "Nulle par la règle des 50 coups",
+    "insufficient material draw": "Nulle par insuffisance matérielle",
+    "three-fold repetitions draw": "Nulle par triple répétition de position"
+}

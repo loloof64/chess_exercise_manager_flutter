@@ -1,0 +1,12 @@
+{
+    "app_title": "Chess exercises manager",
+    "main_title":"Research of chess engine",
+    "select_engine_message":"Choose the chess engine",
+    "game_title":"Playing the exercise",
+    "white_checkmates":"White checkmate.",
+    "black_checkmates":"Black checkmate.",
+    "stalemate":"Stalemate.",
+    "fifty moves draw":"Draw by the 50 moves rule",
+    "insufficient material draw":"Draw by insufficient material",
+    "three-fold repetitions draw":"Draw by threefold repetition of position"
+}
