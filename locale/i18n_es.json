@@ -3,7 +3,7 @@
     "main_title":"La investigación de ajedrez motor",
     "select_engine_message":"Elija el motor de ajedrez",
     "game_title":"Jugando el ejercicio",
-    "white_checkmates":"Los Blancos de jaque mate.",
+    "white_checkmates":"Los Blancos jaque mate.",
     "black_checkmates":"Los Negros jaque mate.",
     "stalemate":"Tablas.",
     "fifty moves draw":"Nulo por la regla de los 50 movimientos",

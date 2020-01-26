@@ -1,3 +1,7 @@
+/*
+Adapted from source code at https://www.didierboelens.com/fr/2018/04/internationalisation---r%C3%A9alisez-une-application-flutter-multilingue/
+ */
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
@@ -32,7 +36,7 @@ class GlobalTranslations {
   ///
   /// Returns the current language code
   ///
-  get currentLanguage => _locale == null ? '' : _locale.languageCode;
+  get currentLanguage => _locale == null ? _supportedLanguages[0] : _locale.languageCode;
 
   ///
   /// Returns the current Locale
@@ -75,8 +79,15 @@ class GlobalTranslations {
     _locale = Locale(language, "");
 
     // Load the language strings
-    String jsonContent = await rootBundle.loadString("locale/i18n_${_locale.languageCode}.json");
-    _localizedValues = json.decode(jsonContent);
+    try {
+      String jsonContent = await rootBundle.loadString(
+          "locale/i18n_$currentLanguage.json");
+      _localizedValues = json.decode(jsonContent);
+    } catch (err) {
+      String jsonContent = await rootBundle.loadString(
+          "locale/i18n_${_supportedLanguages[0]}.json");
+      _localizedValues = json.decode(jsonContent);
+    }
 
     // If we are asked to save the new language in the application preferences
     if (saveInPrefs){
