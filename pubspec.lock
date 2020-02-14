@@ -58,7 +58,7 @@ packages:
     source: hosted
     version: "1.14.11"
   community_material_icon:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: community_material_icon
       url: "https://pub.dartlang.org"
@@ -100,7 +100,7 @@ packages:
   flutter_abstract_chess_board:
     dependency: "direct main"
     description:
-      path: "../../Documents/Programmation/ProjetsPersos/Flutter/flutter_abstract_chess_board"
+      path: "../flutter_abstract_chess_board"
       relative: true
     source: path
     version: "0.0.2"

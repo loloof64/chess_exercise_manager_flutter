@@ -1,17 +1,58 @@
+import 'package:chess_exercise_manager/history_component.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_abstract_chess_board/flutter_abstract_chess_board.dart';
 import 'package:flutter_abstract_chess_board/board_data_types.dart';
+import 'package:community_material_icon/community_material_icon.dart';
 import 'translations.dart';
 
 import 'dart:async';
 
 class GamePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GamePageZone();
+  }
+}
+
+class GamePageZone extends StatefulWidget {
+  @override
+  _GamePageZoneState createState() => _GamePageZoneState();
+}
+
+class _GamePageZoneState extends State<GamePageZone> {
   static const platform =
       const MethodChannel('loloof64.chess_utils/engine_discovery');
   ChessBoard _chessBoard;
+  ChessHistoryComponent _historyComponent;
+  IndexedStack _mainIndexStack;
+  int _shownComponentIndex = 0;
+
+  void _toggleShownComponent() {
+    setState(() {
+      _shownComponentIndex = 1 - _mainIndexStack.index;
+    });
+  }
+
+  void _showHistoryComponent() {
+    setState(() {
+      _shownComponentIndex = 1;
+    });
+  }
+
+  void _showBoardComponent() {
+    setState(() {
+      _shownComponentIndex = 0;
+    });
+  }
+
+  String _toggleComponentButtonLabel() {
+    return _mainIndexStack.index == 0
+        ? allTranslations.text('game history')
+        : allTranslations.text('game board');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +66,55 @@ class GamePage extends StatelessWidget {
     final blackType = whiteToPlayFirst ? PlayerType.Computer : PlayerType.Human;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(allTranslations.text('game_title')),
-      ),
-      body: Center(
-        child: new OrientationBuilder(builder: (context, orientation) {
+        appBar: AppBar(
+          title: Text(allTranslations.text('game_title')),
+        ),
+        body: Center(
+            child: new OrientationBuilder(builder: (context, orientation) {
           _chessBoard = ChessBoard(
-            orientation == Orientation.portrait ? screenDimensions.width - 20.0 : screenDimensions.height - 90.0,
+            orientation == Orientation.portrait
+                ? screenDimensions.width - 20.0
+                : screenDimensions.height - 90.0,
             gameEndedHandler: (type) => handleGameEnded(context, type),
+            moveProducedCallback: (moveData) => print(moveData),
             startFen: startFen,
             whitePlayerType: whiteType,
             blackPlayerType: blackType,
             engineTurnCallback: _engineTurnHandler,
           );
-          return _chessBoard;
-        }),
-      ),
-    );
+          _historyComponent = ChessHistoryComponent(
+            orientation == Orientation.portrait
+                ? screenDimensions.width - 20.0
+                : screenDimensions.height - 90.0,
+          );
+          _mainIndexStack = IndexedStack(
+            children: <Widget>[
+              _chessBoard,
+              _historyComponent,
+            ],
+            index: _shownComponentIndex,
+          );
+          return Column(children: <Widget>[
+            Row(
+              children: <Widget>[
+                RaisedButton(
+                    onPressed: _toggleShownComponent,
+                    child: Center(
+                      child: Column(
+                        children: <Widget>[
+                          Icon(
+                            CommunityMaterialIcons.history,
+                            color: Colors.blue,
+                          ),
+                          Text(_toggleComponentButtonLabel()),
+                        ],
+                      ),
+                    ))
+              ],
+            ),
+            _mainIndexStack,
+          ]);
+        })));
   }
 
   void handleGameEnded(BuildContext context, EndType endType) {
@@ -76,7 +149,7 @@ class GamePage extends StatelessWidget {
     _getEngineOutputAndProcessIt(currentPosition)
         .then((value) {})
         .catchError((err) {
-          print("Failed to run engine turn handler: $err");
+      print("Failed to run engine turn handler: $err");
     });
   }
 
@@ -94,11 +167,13 @@ class GamePage extends StatelessWidget {
   Future<void> _processEngineOutput(MethodCall call) async {
     if (call.method != 'processEngineOutput') return;
     String line = call.arguments;
-    if ( ! line.startsWith('bestmove') ) return;
+    if (!line.startsWith('bestmove')) return;
 
     final moveStr = line.split(' ')[1];
-    final CellCoordinates start = _coordinatesStringToCellCoordinates(moveStr.substring(0, 2));
-    final CellCoordinates end = _coordinatesStringToCellCoordinates(moveStr.substring(2, 4));
+    final CellCoordinates start =
+        _coordinatesStringToCellCoordinates(moveStr.substring(0, 2));
+    final CellCoordinates end =
+        _coordinatesStringToCellCoordinates(moveStr.substring(2, 4));
     final MoveCoordinates move = MoveCoordinates(start: start, end: end);
     final String promotion = moveStr.length >= 5 ? moveStr[4] : null;
 

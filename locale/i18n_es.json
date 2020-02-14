@@ -1,6 +1,7 @@
 {
     "app_title": "Gerenta de ejercicios de ajedrez",
     "main_title":"La investigación de ajedrez motor",
+    "no_oex_engine": "No OEX ajedrez motor instalado",
     "select_engine_message":"Elija el motor de ajedrez",
     "game_title":"Jugando el ejercicio",
     "white_checkmates":"Los Blancos jaque mate.",
@@ -8,5 +9,7 @@
     "stalemate":"Tablas.",
     "fifty moves draw":"Nulo por la regla de los 50 movimientos",
     "insufficient material draw":"Nulo porque no ha bastante piezas",
-    "three-fold repetitions draw":"Nulo por triple repetición de la posición"
+    "three-fold repetitions draw":"Nulo por triple repetición de la posición",
+    "game history":"Historia",
+    "game board": "Tablero de ajedrez"
 }

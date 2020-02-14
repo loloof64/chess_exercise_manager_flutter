@@ -136,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       enginesChildren = [
         Text(
-          "No OEX chess engine installed",
+          allTranslations.text("no_oex_engine"),
           style: TextStyle(fontSize: 20),
         )
       ];
