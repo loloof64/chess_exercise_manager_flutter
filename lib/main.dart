@@ -91,6 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
       engines = [];
     }
 
+    engines.sort();
+
     setState(() {
       _engines = engines;
     });
