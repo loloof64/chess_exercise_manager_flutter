@@ -36,12 +36,6 @@ class _GamePageZoneState extends State<GamePageZone> {
     });
   }
 
-  void _showHistoryComponent() {
-    setState(() {
-      _shownComponentIndex = 1;
-    });
-  }
-
   void _showBoardComponent() {
     setState(() {
       _shownComponentIndex = 0;
@@ -76,7 +70,7 @@ class _GamePageZoneState extends State<GamePageZone> {
                 ? screenDimensions.width - 20.0
                 : screenDimensions.height - 90.0,
             gameEndedHandler: (type) => handleGameEnded(context, type),
-            moveProducedCallback: (moveData) => print(moveData),
+            moveProducedCallback: (moveData) => _historyComponent.addMove(moveData),
             startFen: startFen,
             whitePlayerType: whiteType,
             blackPlayerType: blackType,

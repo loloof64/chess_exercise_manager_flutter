@@ -32,12 +32,11 @@ import 'game.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final currentLocaleStr = await Devicelocale.currentLocale;
-  await allTranslations.init(currentLocaleStr.substring(0,2));
-    runApp(MyApp());
+  await allTranslations.init(currentLocaleStr.substring(0, 2));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -109,49 +108,48 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    var enginesChildren;
+    Widget enginesChild;
 
     if (_engines.length > 0) {
-      enginesChildren = [
-        Text(
-          allTranslations.text('select_engine_message'),
-          style: TextStyle(fontSize: 20),
+      enginesChild = Center(
+        child: Column(
+          children: [
+            Text(
+              allTranslations.text('select_engine_message'),
+              style: TextStyle(fontSize: 20),
+            ),
+            Expanded(child: ListView(
+              shrinkWrap: true,
+              children: _engines.map((current) {
+                return FlatButton(
+                  child: Text(
+                    current,
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                  onPressed: () => _selectEngine(current),
+                );
+              }).toList(),
+            ),)
+          ],
         ),
-        ListView(
-          shrinkWrap: true,
-          children: _engines.map((current) {
-            return FlatButton(
-              child: Text(
-                current,
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-              onPressed: () =>_selectEngine(current),
-            );
-          }).toList(),)
-      ];
+      );
     } else {
-      enginesChildren = [
-        Text(
+      enginesChild = Center(
+        child: Text(
           allTranslations.text("no_oex_engine"),
           style: TextStyle(fontSize: 20),
-        )
-      ];
+        ),
+      );
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: enginesChildren,
-        ),
-      ),
+      body: enginesChild,
     );
   }
 }
