@@ -97,7 +97,7 @@ class _GamePageZoneState extends State<GamePageZone> {
                       child: Column(
                         children: <Widget>[
                           Icon(
-                            CommunityMaterialIcons.history,
+                            _mainIndexStack.index == 0 ? CommunityMaterialIcons.history : CommunityMaterialIcons.chess_rook,
                             color: Colors.blue,
                           ),
                           Text(_toggleComponentButtonLabel()),
